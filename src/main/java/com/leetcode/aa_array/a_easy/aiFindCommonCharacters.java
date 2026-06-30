@@ -1,44 +1,56 @@
 package com.leetcode.aa_array.a_easy;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class aiFindCommonCharacters {
 
     public static List<String> commonChars(String[] words) {
 
-        List<Map<Character, Integer>> mapList = new ArrayList<>();
+        List<Map<Character, Integer>> charCountList = new ArrayList<>();
+        List<String> result = new ArrayList<>();
 
-        for (String w : words) {
-            Map<Character, Integer> map = new HashMap<>();
-            for (int i = 0; i < w.length(); i++) {
-                if (map.containsKey(w.charAt(i))) {
-                    map.put(w.charAt(i), map.get(w.charAt(i)) + 1);
+        // Build a character frequency map for each word
+        for (String word : words) {
+
+            Map<Character, Integer> charCount = new HashMap<>();
+            for (int i = 0; i < word.length(); i++) {
+
+                if (charCount.containsKey(word.charAt(i))) {
+                    charCount.put(word.charAt(i), charCount.get(word.charAt(i)) + 1);
                 } else {
-                    map.put(w.charAt(i), 1);
+                    charCount.put(word.charAt(i), 1);
+                }
+
+            }
+//            System.out.println(charCount);
+            charCountList.add(charCount);
+        }
+//        System.out.println(charCountList);
+
+
+
+        // For each letter a-z, find the minimum count across all words
+        for (char c = 'a'; c <= 'z'; c++) { // from a to z
+            int min = Integer.MAX_VALUE;
+            for (Map<Character, Integer> charCount : charCountList) { // each word
+                if (charCount.getOrDefault(c, 0) < min) {
+                    min = charCount.getOrDefault(c, 0);
                 }
             }
-            mapList.add(map);
+            // Add the letter 'min' times to the result
+            if (min > 0) {
+                for (int i = 0; i < min; i++) {
+                    result.add(String.valueOf(c));
+                }
+            }
+
         }
 
-        System.out.println(mapList);
-
-
-        for (int i = 1; i < mapList.size(); i++) {
-
-        }
-
-
-
-        return null;
+        return result;
     }
 
     public static void main(String[] args) {
-
-        String[] words = new String[]{"bella", "label", "roller"};
-
-        commonChars(words);
+        String[] words = new String[]{"cool", "lock", "cook"};
+        System.out.println(commonChars(words));
     }
 }
